@@ -20,7 +20,9 @@ class Quiz {
   }
 
   checkAnswer(answer) {
-    return this.correctAnswers++;
+    if (answer === this.getQuestion().answer) {
+      this.correctAnswers++;
+    }
   }
 
   hasEnded() {
@@ -29,5 +31,23 @@ class Quiz {
     } else {
       return true;
     }
+  }
+  filterQuestionsByDifficulty(difficulty) {
+    if (typeof difficulty !== "number" || difficulty < 1 || difficulty > 3)
+      return;
+
+    this.questions = this.questions.filter((question) => {
+      if (difficulty === question.difficulty) {
+        return question;
+      }
+    });
+  }
+  averageDifficulty() {
+    const total = this.questions.reduce(
+      (total, question) => total + question.difficulty,
+      0
+    );
+    const average = total / this.questions.length;
+    return average;
   }
 }
