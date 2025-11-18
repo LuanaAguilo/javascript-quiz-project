@@ -72,6 +72,20 @@ document.addEventListener("DOMContentLoaded", () => {
   /************  TIMER  ************/
 
   let timer;
+  timer = setInterval(() => {
+    quiz.timeRemaining--;
+    const minutes = Math.floor(quiz.timeRemaining / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
+    const timeRemainingContainer = document.getElementById("timeRemaining");
+    timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+
+    if (quiz.timeRemaining <= 0) {
+      clearInterval(timer);
+      showEndView();
+    }
+  }, 1000);
 
   /************  EVENT LISTENERS  ************/
 
@@ -167,7 +181,10 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedAnswer = oneChoice.value;
       }
     });
-    console.log(selectedAnswer);
+    quiz.checkAnswer(selectedAnswer);
+    console.log(quiz.correctAnswers);
+    quiz.moveToNextQuestion();
+    showQuestion();
 
     // 2. Loop through all the choice elements and check which one is selected
     // Hint: Radio input elements have a property `.checked` (e.g., `element.checked`).
@@ -182,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showResults() {
     // YOUR CODE HERE:
-    //
+
     // 1. Hide the quiz view (div#quizView)
     quizView.style.display = "none";
 
@@ -190,6 +207,6 @@ document.addEventListener("DOMContentLoaded", () => {
     endView.style.display = "flex";
 
     // 3. Update the result container (div#result) inner text to show the number of correct answers out of total questions
-    resultContainer.innerText = `You scored 1 out of 1 correct answers!`; // This value is hardcoded as a placeholder
+    resultContainer.innerText = `You scored ${quiz.correctAnswers} out of ${quiz.questions.length} correct answers!`; // This value is hardcoded as a placeholder
   }
 });
